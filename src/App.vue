@@ -1,20 +1,41 @@
-<script setup></script>
+<script setup>
+import {ref} from 'vue'
+
+const newGrocery=ref('')
+const groceries = ref([])
+
+const addGrocery =() => {
+  if(newGrocery.value) {
+    groceries.value.push({id: nanoid(), name: newGrocery.value})
+    newGrocery.value=''
+  }
+}
+
+const deleteGrocery = () => {
+  newGrocery.value ='deleting new grocery'
+}
+
+
+</script>
 
 <template>
   <main>
     <h1 class="title"> :) Vue Grocery List :)</h1>
-    <form class="newGroceryFrom">
-        <input id="newGrocery" 
+    <form class="newGroceryFrom" @submit.prevent="addGrocery">
+        <input 
+        id="newGrocery" 
         autocomplete="off"
         type="text" 
-        placeholder="Add an item to your list">
-        <button id="addBtn" type ="submit">Add</button>
+        placeholder="Add an item to your list"
+        v-model="newGrocery"
+      />
+      <button type ="submit">Add</button>
     </form>
     <ul>
-    <li>Tortilla</li>
+    <li @click="remove">{{newGrocery}}</li>
     </ul>
   </main>
-  
+  <pre>{{ groceries }}</pre>
 </template>
 
 <style lang="postcss" scoped>
