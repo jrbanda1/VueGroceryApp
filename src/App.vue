@@ -1,18 +1,20 @@
 <script setup>
 import {ref} from 'vue'
+import {nanoid} from 'nanoid'
 
 const newGrocery=ref('')
 const groceries = ref([])
 
-const addGrocery =() => {
+const addGrocery = () => {
   if(newGrocery.value) {
     groceries.value.push({id: nanoid(), name: newGrocery.value})
     newGrocery.value=''
   }
 }
 
-const deleteGrocery = () => {
-  newGrocery.value ='deleting new grocery'
+const deleteGrocery = id => {
+  const removeIndex = groceries.value.findIndex(grocery => grocery.id === id)
+  groceries.value.splice(removeIndex, 1)
 }
 
 
@@ -21,7 +23,7 @@ const deleteGrocery = () => {
 <template>
   <main>
     <h1 class="title"> :) Vue Grocery List :)</h1>
-    <form class="newGroceryFrom" @submit.prevent="addGrocery">
+    <form class="newGroceryForm" @submit.prevent="addGrocery">
         <input 
         id="newGrocery" 
         autocomplete="off"
@@ -32,10 +34,10 @@ const deleteGrocery = () => {
       <button type ="submit">Add</button>
     </form>
     <ul>
-    <li @click="remove">{{newGrocery}}</li>
+    <li v-for="grocery in groceries" @click="deleteGrocery(grocery.id)">
+      {{grocery.name}}</li>
     </ul>
   </main>
-  <pre>{{ groceries }}</pre>
 </template>
 
 <style lang="postcss" scoped>
